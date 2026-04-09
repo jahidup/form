@@ -7,7 +7,6 @@ form.addEventListener('submit', async (e) => {
   const name = document.getElementById('name').value.trim();
   const mobile = document.getElementById('mobile').value.trim();
   
-  // Simple client-side validation
   if (!name || !mobile) {
     showMessage('Please fill in all fields', 'error');
     return;
@@ -18,7 +17,6 @@ form.addEventListener('submit', async (e) => {
     return;
   }
   
-  // Disable button while submitting
   const submitBtn = form.querySelector('button');
   submitBtn.disabled = true;
   submitBtn.textContent = 'Submitting...';
@@ -33,13 +31,14 @@ form.addEventListener('submit', async (e) => {
     const data = await response.json();
     
     if (response.ok) {
-      showMessage('✅ Contact saved successfully!', 'success');
+      showMessage('✅ ' + data.message, 'success');
       form.reset();
     } else {
-      showMessage(data.message || 'Something went wrong', 'error');
+      showMessage('❌ ' + (data.message || 'Submission failed'), 'error');
     }
   } catch (error) {
-    showMessage('Network error. Please try again.', 'error');
+    console.error('Fetch error:', error);
+    showMessage('Network error: Could not reach server', 'error');
   } finally {
     submitBtn.disabled = false;
     submitBtn.textContent = 'Submit';
@@ -49,8 +48,8 @@ form.addEventListener('submit', async (e) => {
 function showMessage(msg, type) {
   messageDiv.textContent = msg;
   messageDiv.className = `message ${type}`;
+  messageDiv.style.display = 'block';
   setTimeout(() => {
     messageDiv.style.display = 'none';
-    messageDiv.className = 'message';
-  }, 3000);
+  }, 4000);
 }
